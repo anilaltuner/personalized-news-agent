@@ -1,0 +1,8 @@
+pinecone-client
+firstbatch==0.1.70
+beautifulsoup4===4.12.2
+streamlit==1.28.0
+Markdown==3.5
+langchain==0.0.327
+openai==0.28.0
+st_pages==0.4.5
