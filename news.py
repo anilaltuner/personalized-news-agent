@@ -140,7 +140,7 @@ def main():
         yet relevant, discoveries.* \n\n *To engage with this chatbot, simply initiate a session with 
         your username in the left sidebar and proceed to the **"Personalized Chatbot"** area. The agent's advanced 
         session management remembers your likes ensuring a customized dialogue every time you return, even as you switch
-         between devices. * """)
+         between devices.* """)
 
     if 'personalized' not in st.session_state:
         with st.spinner('Configuring Firstbatch Engine and documents are fetching...'):
