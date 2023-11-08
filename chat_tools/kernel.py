@@ -6,7 +6,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.schema import StrOutputParser
-
+from prompts.prompts import no_history, has_history
 os.environ["OPENAI_API_KEY"] = st.secrets["open_ai_api_key"]
 
 
@@ -43,15 +43,11 @@ User Inquiry:
 {user_input}
 
 Upcoming Chatbot Response will focus on:
-
-[Content Customization]: Shaping the reply to reflect the user's likes using relevant language and themes.
-[Interaction and Progression]: Keeping the user engaged with pertinent questions or proposed activities.
-[Evolution and Adjustment]: Wrapping up the dialogue in a manner that incorporates the user's input for future interactions.
-
+{strategy}
 """.strip()
 
     prompt = PromptTemplate(
-        template=sk_prompt, input_variables=["context", "user_input", "chat_history"]
+        template=sk_prompt, input_variables=["context", "user_input", "chat_history", "user_interaction", "strategy"]
     )
     chain = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0.8, streaming=True, max_tokens=512)
 
@@ -86,7 +82,12 @@ def chat(model, prompt, message):
         user_div.string = f"{st.session_state.username}: {message}"
         chat_output.append(user_div)
     stream_handler = StreamHandler(soup=soup, chat_output=chat_output)
+    strategy = no_history if st.session_state["chat_history"] == "" else has_history
     answer = runnable.invoke(
-        ({"context": context, "user_interaction": user_interaction, "user_input": message, "chat_history": st.session_state["chat_history"]}),
+        ({"context": context,
+          "user_interaction": user_interaction,
+          "user_input": message,
+          "chat_history": st.session_state["chat_history"],
+          "strategy": strategy}),
         config={"callbacks": [stream_handler]})
     st.session_state["chat_history"] += f"\nUser:> {message}\nChatBot:> {answer}\n"
