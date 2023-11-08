@@ -31,7 +31,7 @@ Note: The chatbot is predominantly influenced by the last three significant inte
 
 1. Clone the repository:
    ```bash
-   git clone git@github.com:anilaltuner/chatbot-rss-plugin.git
+   git clone git@github.com:anilaltuner/personalized-news-agent.git
    ```
 
 2. Install the required libraries:
