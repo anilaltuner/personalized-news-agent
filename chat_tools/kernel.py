@@ -26,43 +26,58 @@ class StreamHandler(BaseCallbackHandler):
 
 def setup_chat_with_memory():
     sk_prompt = """   
-Don't write the prompt titles as answer. And dont write "Chatbot>" as answer 
-     
-Context Articles and Recommendations:
+Avoid using "Answer:" or "Chatbot>" as a response header. Responses should be concise, not exceeding 400 tokens.
+
+Prioritize articles that the user has expressed interest in for tailored recommendations. Use articles from the initial batch for suggestion purposes.
+
+User Preferences:
+{user_interaction}
+
+Relevant Articles for Context and Suggestions:
 {context}
 
-Previous Chat Dialogue:
+Prior Conversation Record:
 {chat_history}
 
-User's Question: {user_input}
+User Inquiry:
+{user_input}
 
-ChatBot's Reply will about to:
-[Content Tailoring]: Crafting the response to align with the user's preferences, using language and topics that mirror their interests.
-[Engagement and Continuity]: Engaging the user by asking questions or suggesting actions that are likely to align with their interests.
-[Learning and Adaptation]: Ending the conversation in a way that allows for continuous learning from the user's feedback.
+Upcoming Chatbot Response will focus on:
+
+[Content Customization]: Shaping the reply to reflect the user's likes using relevant language and themes.
+[Interaction and Progression]: Keeping the user engaged with pertinent questions or proposed activities.
+[Evolution and Adjustment]: Wrapping up the dialogue in a manner that incorporates the user's input for future interactions.
+
 """.strip()
 
     prompt = PromptTemplate(
         template=sk_prompt, input_variables=["context", "user_input", "chat_history"]
     )
-    chain = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0.8, streaming=True, max_tokens=256)
+    chain = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0.8, streaming=True, max_tokens=512)
 
     return chain, prompt
 
 
 def generate_session_context(session):
-    context = "Recommended context from Firstbatch's recommendation algorithm:"
+    if len(session["likes"]) == 0:
+        return "User has no interaction", "User has no recommended articles"
+    user_interaction = ""
+    for doc in session["likes"]:
+        user_interaction += (
+                "\nArticle text is: " + doc.data["text"] + " Link: " + doc.data["link"] + "\n"
+        )
+    context = ""
     for doc in session["batches"][:5]:
         context += (
                 "\nArticle text is: " + doc.data["text"] + " Link: " + doc.data["link"] + "\n"
         )
-    return context
+    return context, user_interaction
 
 
 def chat(model, prompt, message):
     if "chat_history" not in st.session_state:
         st.session_state["chat_history"] = ""
-    context = generate_session_context(st.session_state)
+    context, user_interaction = generate_session_context(st.session_state)
     runnable = prompt | model | StrOutputParser()
     soup = BeautifulSoup(st.session_state.html_content, 'html.parser')
     chat_output = soup.find(id='chat-output')
@@ -72,6 +87,6 @@ def chat(model, prompt, message):
         chat_output.append(user_div)
     stream_handler = StreamHandler(soup=soup, chat_output=chat_output)
     answer = runnable.invoke(
-        ({"context": context, "user_input": message, "chat_history": st.session_state["chat_history"]}),
+        ({"context": context, "user_interaction": user_interaction, "user_input": message, "chat_history": st.session_state["chat_history"]}),
         config={"callbacks": [stream_handler]})
     st.session_state["chat_history"] += f"\nUser:> {message}\nChatBot:> {answer}\n"

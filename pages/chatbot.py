@@ -43,7 +43,6 @@ def update_session_state(user_input):
             </div>
         </div>
         """
-    st.session_state.chat_placeholder = st.empty()
     st.session_state.chat_history = ""
     st.session_state.chat_loader = 3
 
