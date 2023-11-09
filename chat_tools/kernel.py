@@ -28,7 +28,10 @@ def setup_chat_with_memory():
     sk_prompt = """   
 Avoid using "Answer:" or "Chatbot>" as a response header. Responses should be concise, not exceeding 400 tokens.
 
-Prioritize articles that the user has expressed interest in for tailored recommendations. Use articles from the initial batch for suggestion purposes.
+User preferences is user's interaction with the articles. Use the articles that the user has liked for tailored recommendations.
+Relevant Articles for Context and Suggestions is the articles which exctracted user has liked. Use the articles that the more exploration and alternative.
+Prior Conversation Record is the previous chat history. This one is least important for user interests. Use that for engagement and continuity.
+Upcoming Chatbot Response will focus on is the strategy for the upcoming response. Use that for learn about user state on product experience.
 
 User Preferences:
 {user_interaction}
