@@ -26,7 +26,7 @@ class StreamHandler(BaseCallbackHandler):
 
 def setup_chat_with_memory():
     sk_prompt = """   
-Avoid using "Answer:" or "Chatbot>" as a response header. Responses should be concise, not exceeding 400 tokens.
+Avoid using "Answer:" or "Chatbot>" as a response header. Responses should be concise, not exceeding 250 tokens.
 
 User preferences is user's interaction with the articles. Use the articles that the user has liked for tailored recommendations.
 Relevant Articles for Context and Suggestions is the articles which exctracted user has liked. Use the articles that the more exploration and alternative.
