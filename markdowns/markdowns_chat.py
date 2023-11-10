@@ -104,12 +104,11 @@ button:hover {
 """
 
 sidebar = """
-    Personalized Chatbot Powered by Firstbatch Recommendation Algorithm
+    Personalized Chatbot Powered by User Embeddings
     
-    *Our chatbot, integrated with the Firstbatch recommendation engine, ensures a seamless and tailored news feed 
+    *Our chatbot, integrated with the User Embeddings, ensures a seamless and tailored news feed 
     experience for users. As users interact and express their preferences, the chatbot refines its responses, 
-    drawing from Firstbatch's recommendation capabilities. Here's a breakdown of how the recommendation 
-    personalization progresses:* 
+    drawing from User Embeddings capabilities. Here's a breakdown of how the personalization progresses:* 
     
     **Level 1: Initialization Phase**
     
@@ -134,4 +133,4 @@ sidebar = """
     https://firstbatch.gitbook.io/rss-feed-algorithm/). 
     
     SDK Documentation: Developers looking to integrate or understand the functionalities can refer to the [FirstBatch 
-    SDK Docs](https://firstbatch.gitbook.io/firstbatch-sdk/get-started/introduction).* """
+    SDK Docs](https://firstbatch.gitbook.io/firstbatch-sdk/get-started/introduction). """
